@@ -1,0 +1,683 @@
+/* ================================================================
+   MUMBAI INDIANS CRICKET — style.css
+   Theme: Deep navy + liquid gold. IPL stadium luxury.
+   Fonts: Anton (display) + Barlow Condensed (UI)
+   ================================================================ */
+
+/* ── TOKENS ─────────────────────────────────────────────────── */
+:root {
+  --mi-blue:      #003087;
+  --mi-blue-mid:  #0047AB;
+  --mi-blue-lt:   #1565c0;
+  --mi-gold:      #FFD700;
+  --mi-gold-dk:   #c8960c;
+  --mi-gold-lt:   #ffe566;
+  --mi-red:       #e63946;
+  --mi-white:     #f4f1e8;
+  --mi-off:       #b8b4a4;
+  --bg-dark:      #00061a;
+  --font-display: 'Anton', sans-serif;
+  --font-ui:      'Barlow Condensed', sans-serif;
+  --radius:       14px;
+  --ease:         cubic-bezier(.4,0,.2,1);
+}
+
+/* ── RESET ───────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%; overflow: hidden;
+  font-family: var(--font-ui);
+  background: var(--bg-dark);
+  color: var(--mi-white);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── APP ─────────────────────────────────────────────────────── */
+#app {
+  position: relative; width: 100vw; height: 100vh;
+  overflow: hidden; display: flex;
+  align-items: center; justify-content: center;
+}
+
+/* ── STADIUM ─────────────────────────────────────────────────── */
+#stadium { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+
+.s-sky {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% -10%,
+    #1a2a6c 0%, #0d1a4a 35%, #050d28 65%, #00061a 100%);
+}
+
+/* Stadium roof arc (Wankhede silhouette) */
+.wankhede-arc {
+  position: absolute; bottom: 0; left: -10%; right: -10%; height: 55%;
+  background: radial-gradient(ellipse 100% 80% at 50% 110%,
+    rgba(0,48,135,.85) 0%, rgba(0,30,90,.6) 50%, transparent 70%);
+  border-top: 1px solid rgba(255,215,0,.08);
+}
+
+/* Light beams */
+.s-lights {
+  position: absolute; inset: 0; pointer-events: none;
+}
+.light-beam {
+  position: absolute; top: 0; width: 3px; height: 55%;
+  background: linear-gradient(180deg, rgba(255,215,0,.55) 0%,
+    rgba(255,215,0,.15) 70%, transparent 100%);
+  border-radius: 2px;
+}
+.light-beam::before {
+  content: ''; position: absolute; top: -6px; left: 50%;
+  transform: translateX(-50%);
+  width: 28px; height: 10px;
+  background: var(--mi-gold);
+  border-radius: 4px;
+  box-shadow: 0 0 24px 8px rgba(255,215,0,.65);
+}
+/* Light beam cones */
+.light-beam::after {
+  content: ''; position: absolute; top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 80px; height: 100%;
+  background: linear-gradient(180deg,
+    rgba(255,215,0,.06) 0%, transparent 100%);
+  clip-path: polygon(40% 0%, 60% 0%, 100% 100%, 0% 100%);
+}
+.lb1 { left: 8%; }
+.lb2 { left: 28%; }
+.lb3 { right: 28%; }
+.lb4 { right: 8%; }
+
+/* Stands */
+.s-stands {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 65%;
+  background:
+    radial-gradient(ellipse 110% 50% at 50% 110%,
+      rgba(0,48,135,.9) 40%, transparent 70%),
+    radial-gradient(ellipse 70% 35% at 20% 120%,
+      rgba(0,30,90,.8) 45%, transparent 65%),
+    radial-gradient(ellipse 70% 35% at 80% 120%,
+      rgba(0,30,90,.8) 45%, transparent 65%);
+}
+
+/* Outfield green */
+.s-outfield {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
+  background: radial-gradient(ellipse 95% 55% at 50% 105%,
+    #0a3a12 0%, #061f0a 55%, transparent 75%);
+}
+
+/* Crowd dots */
+#crowd-wrap { position: absolute; inset: 0; pointer-events: none; }
+.cdot {
+  position: absolute; border-radius: 50%; opacity: .5;
+  animation: bobble var(--dur, 1.6s) ease-in-out infinite alternate;
+  animation-delay: var(--del, 0s);
+}
+@keyframes bobble {
+  to { transform: translateY(-4px); }
+}
+
+/* ── GAME SCREENS ────────────────────────────────────────────── */
+.gs {
+  position: absolute; inset: 0;
+  display: none; align-items: center; justify-content: center;
+  z-index: 10;
+}
+.gs.active { display: flex; }
+
+/* ── MI CARD (shared card shell) ────────────────────────────── */
+.mi-card {
+  background: rgba(0, 8, 30, .88);
+  border: 1px solid rgba(255, 215, 0, .3);
+  border-radius: 22px;
+  backdrop-filter: blur(18px);
+  padding: clamp(22px, 5vw, 46px) clamp(26px, 6vw, 60px);
+  max-width: 440px; width: 90%;
+  box-shadow:
+    0 0 0 1px rgba(255,215,0,.08),
+    0 0 60px rgba(0,71,171,.3),
+    0 24px 64px rgba(0,0,0,.75);
+  animation: slideUp .55s cubic-bezier(.2,1.4,.4,1) both;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(32px) scale(.92); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── TOSS SCREEN ─────────────────────────────────────────────── */
+.toss-card { text-align: center; }
+
+.mi-logo-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; margin-bottom: 20px;
+}
+.mi-crest {
+  font-size: clamp(2.8rem, 8vw, 4.2rem);
+  filter: drop-shadow(0 0 14px rgba(255,215,0,.65));
+  animation: crестSpin 8s linear infinite;
+}
+@keyframes crестSpin {
+  0%,100% { transform: rotate(-4deg) scale(1); }
+  50%      { transform: rotate(4deg) scale(1.06); }
+}
+.mi-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 7vw, 3.2rem);
+  line-height: .95; letter-spacing: .04em;
+  color: var(--mi-white);
+}
+.mi-title span { color: var(--mi-gold); }
+.mi-tagline {
+  font-size: .75rem; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--mi-gold);
+  margin-top: 4px;
+}
+
+/* Toss coin */
+.toss-coin-wrap {
+  margin: 20px 0; perspective: 500px;
+}
+.coin {
+  width: 80px; height: 80px;
+  margin: 0 auto;
+  border-radius: 50%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .1s;
+  cursor: default;
+}
+.coin-face {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: .95rem; letter-spacing: .1em;
+  backface-visibility: hidden;
+}
+.coin-face.heads {
+  background: radial-gradient(circle at 35% 35%,
+    var(--mi-gold-lt), var(--mi-gold) 50%, var(--mi-gold-dk));
+  color: var(--mi-blue);
+  box-shadow: 0 0 20px rgba(255,215,0,.4);
+}
+.coin-face.tails {
+  background: radial-gradient(circle at 35% 35%,
+    var(--mi-blue-lt), var(--mi-blue));
+  color: var(--mi-gold);
+  transform: rotateY(180deg);
+  box-shadow: 0 0 20px rgba(0,71,171,.4);
+}
+@keyframes coinSpin {
+  0%   { transform: rotateY(0deg); }
+  100% { transform: rotateY(1800deg); }
+}
+.coin.spinning { animation: coinSpin 1.8s ease-out forwards; }
+
+.toss-msg {
+  font-size: 1rem; letter-spacing: .12em;
+  color: var(--mi-gold); margin-top: 10px;
+  min-height: 1.4em; text-transform: uppercase;
+}
+.toss-inst {
+  font-size: .8rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--mi-off);
+  margin-bottom: 12px;
+}
+
+/* Difficulty */
+.toss-diff { margin-top: 4px; }
+.diff-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 12px; }
+.diff-btn {
+  flex: 1; max-width: 110px; padding: 9px 0;
+  border: 2px solid rgba(255,215,0,.35);
+  background: transparent; color: var(--mi-white);
+  font-family: var(--font-ui); font-size: .95rem; font-weight: 700;
+  letter-spacing: .1em; border-radius: var(--radius);
+  cursor: pointer; transition: .22s var(--ease);
+  text-transform: uppercase;
+}
+.diff-btn:hover { border-color: var(--mi-gold); background: rgba(255,215,0,.08); }
+.diff-btn.active {
+  background: var(--mi-gold); border-color: var(--mi-gold);
+  color: var(--mi-blue);
+}
+
+.hs-pill {
+  font-size: .85rem; letter-spacing: .1em;
+  color: var(--mi-gold); margin-bottom: 4px;
+}
+
+/* ── MI BUTTON ───────────────────────────────────────────────── */
+.mi-btn {
+  position: relative; overflow: hidden;
+  padding: 13px 28px;
+  background: linear-gradient(135deg, var(--mi-gold) 0%, var(--mi-gold-dk) 100%);
+  border: none; border-radius: var(--radius);
+  color: var(--mi-blue);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  letter-spacing: .08em;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(255,215,0,.35);
+  transition: .22s var(--ease);
+  text-transform: uppercase;
+}
+.mi-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255,215,0,.5);
+}
+.mi-btn:active { transform: translateY(1px); }
+.mi-btn.secondary {
+  background: transparent;
+  border: 2px solid rgba(255,215,0,.4);
+  color: var(--mi-off);
+  box-shadow: none;
+}
+.mi-btn.secondary:hover { border-color: var(--mi-gold); color: var(--mi-white); }
+
+/* ── SCOREBOARD STRIP ────────────────────────────────────────── */
+#score-strip {
+  position: absolute; top: 12px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(0,8,30,.8);
+  border: 1px solid rgba(255,215,0,.25);
+  border-radius: 50px;
+  padding: 7px 22px;
+  backdrop-filter: blur(10px);
+  z-index: 50; min-width: 280px; justify-content: space-between;
+  box-shadow: 0 4px 24px rgba(0,0,0,.6);
+}
+.ss-brand {
+  font-family: var(--font-display);
+  font-size: 1.2rem; color: var(--mi-gold);
+  letter-spacing: .08em;
+}
+.ss-score {
+  font-family: var(--font-display);
+  font-size: 1.6rem; color: var(--mi-white);
+  letter-spacing: .05em;
+}
+.ss-sep { color: rgba(255,255,255,.3); margin: 0 6px; }
+.ss-hs {
+  font-size: .65rem; letter-spacing: .16em;
+  color: var(--mi-gold); text-transform: uppercase;
+}
+
+/* ── BATTING BANNER ──────────────────────────────────────────── */
+#batting-banner {
+  position: absolute; top: 62px; left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  display: flex; align-items: center; gap: 10px;
+  font-size: .65rem; letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(255,215,0,.75);
+  z-index: 25;
+}
+.bb-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--mi-gold);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.bb-dot:last-child { animation-delay: .7s; }
+@keyframes pulse {
+  0%,100% { opacity: .4; transform: scale(.8); }
+  50%      { opacity: 1; transform: scale(1.3); }
+}
+
+/* ── ARENA ───────────────────────────────────────────────────── */
+#arena {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(360px, 88vw);
+  height: min(500px, 72vh);
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(0,8,24,.3);
+  border: 1px solid rgba(255,215,0,.1);
+  box-shadow: inset 0 0 40px rgba(0,0,0,.5);
+  z-index: 20;
+}
+
+/* Pitch strip */
+.pitch-strip {
+  position: absolute; left: 50%; top: 10%; bottom: 15%;
+  width: 54px; transform: translateX(-50%);
+  background: linear-gradient(180deg, #3a2a10 0%, #4a3518 50%, #2e1f0a 100%);
+  border-radius: 6px; opacity: .6;
+}
+
+/* Crease */
+.crease {
+  position: absolute; left: 12%; right: 12%; height: 2px;
+  background: rgba(244,241,232,.2); border-radius: 2px;
+}
+.crease-t { top: 15%; }
+.crease-b { bottom: 18%; }
+
+/* Stumps */
+#stumps {
+  position: absolute; bottom: 10%; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 7px; align-items: flex-end;
+}
+.stump {
+  width: 5px; height: 44px;
+  background: linear-gradient(180deg, #FFD700 0%, #c8960c 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(255,215,0,.45);
+}
+.bail {
+  position: absolute; top: -4px;
+  width: 12px; height: 5px;
+  background: var(--mi-gold); border-radius: 3px;
+  box-shadow: 0 0 6px rgba(255,215,0,.5);
+}
+.bail-l { left: 2px; }
+.bail-r { right: 2px; }
+
+/* Bowler silhouette */
+#bowler {
+  position: absolute; top: 8%; left: 50%;
+  transform: translateX(-50%);
+  width: 54px; opacity: .7;
+  animation: bowlerRun .8s ease-in-out infinite alternate;
+}
+@keyframes bowlerRun {
+  from { transform: translateX(-50%) rotate(-2deg); }
+  to   { transform: translateX(-50%) rotate(2deg) translateY(-2px); }
+}
+
+/* Batsman */
+#batsman {
+  position: absolute; bottom: 20%; left: 50%;
+  transform: translateX(-50%);
+  width: 52px;
+}
+#bat-swing-anim {
+  position: absolute; inset: 0;
+  pointer-events: none;
+}
+#batsman.swing svg {
+  animation: batsmanSwing .3s cubic-bezier(.2,1.4,.4,1) forwards;
+}
+@keyframes batsmanSwing {
+  0%   { transform: rotate(0deg) scale(1); }
+  40%  { transform: rotate(-20deg) scale(1.08); }
+  100% { transform: rotate(10deg) scale(1); }
+}
+
+/* THE BALL */
+#ball {
+  position: absolute;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%,
+    #e74c3c 0%, #c0392b 55%, #7b1010 100%);
+  box-shadow: inset -3px -3px 7px rgba(0,0,0,.35),
+              0 0 14px rgba(231,76,60,.5);
+  left: 50%; top: -46px;
+  transform: translateX(-50%);
+  cursor: pointer; z-index: 30;
+}
+#ball .seam {
+  position: absolute; top: 8px; left: 9px;
+  width: 20px; height: 20px; border-radius: 50%;
+  border-top: 2px solid rgba(255,255,255,.3);
+  border-right: 2px solid transparent;
+  border-bottom: 2px solid rgba(255,255,255,.3);
+  border-left: 2px solid transparent;
+  transform: rotate(25deg);
+}
+#ball .shine {
+  position: absolute; top: 6px; left: 8px;
+  width: 10px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,.25);
+}
+#ball.glowing {
+  box-shadow: inset -3px -3px 7px rgba(0,0,0,.35),
+              0 0 28px rgba(231,76,60,.8), 0 0 50px rgba(231,76,60,.3);
+}
+#ball.hit-gold {
+  background: radial-gradient(circle at 35% 30%,
+    var(--mi-gold-lt), var(--mi-gold) 55%, var(--mi-gold-dk));
+  box-shadow: 0 0 40px rgba(255,215,0,.9), 0 0 80px rgba(255,215,0,.4);
+}
+
+/* Burst text */
+#burst {
+  position: absolute; left: 50%; top: 38%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: 4.5rem; pointer-events: none; opacity: 0; z-index: 50;
+  text-shadow: 0 0 20px currentColor;
+}
+#burst.pop {
+  animation: burstPop .85s cubic-bezier(.2,1.4,.4,1) forwards;
+}
+@keyframes burstPop {
+  0%   { opacity:0; transform:translate(-50%,-50%) scale(.3); }
+  30%  { opacity:1; transform:translate(-50%,-50%) scale(1.15); }
+  70%  { opacity:1; transform:translate(-50%,-80%) scale(1); }
+  100% { opacity:0; transform:translate(-50%,-120%) scale(.9); }
+}
+
+/* Hit hint */
+#hit-hint {
+  position: absolute; bottom: 20%; left: 50%;
+  transform: translateX(-50%);
+  font-size: .68rem; letter-spacing: .2em;
+  color: rgba(255,215,0,.3); text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* ── OVER ROW ────────────────────────────────────────────────── */
+#over-row {
+  position: absolute; bottom: 82px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 8px;
+  z-index: 25;
+}
+.over-label {
+  font-size: .58rem; letter-spacing: .18em;
+  color: rgba(255,215,0,.5); text-transform: uppercase;
+}
+#dot-row { display: flex; gap: 5px; }
+.over-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: rgba(244,241,232,.15);
+  border: 1px solid rgba(244,241,232,.25);
+  transition: background .25s;
+}
+.over-dot.scored { background: var(--mi-gold); border-color: var(--mi-gold); }
+.over-dot.wicket { background: var(--mi-red);  border-color: var(--mi-red); }
+.over-dot.six    { background: #a855f7; border-color: #a855f7; }
+.over-dot.four   { background: #22d3ee; border-color: #22d3ee; }
+
+/* ── SPEED METER ─────────────────────────────────────────────── */
+#speed-meter {
+  position: absolute; top: 70px;
+  right: calc(50% - min(180px, 44vw));
+  display: flex; align-items: center; gap: 6px; z-index: 25;
+}
+.sm-label {
+  font-size: .58rem; letter-spacing: .16em;
+  color: var(--mi-gold); text-transform: uppercase;
+}
+#sm-track {
+  width: 72px; height: 5px;
+  background: rgba(255,255,255,.1); border-radius: 3px; overflow: hidden;
+}
+#sm-fill {
+  height: 100%; width: 10%;
+  background: linear-gradient(90deg, var(--mi-gold), #ff6b35);
+  border-radius: 3px; transition: width .5s ease;
+}
+#sm-val {
+  font-size: .68rem; color: var(--mi-gold); min-width: 28px;
+}
+
+/* ── HIT BUTTON ──────────────────────────────────────────────── */
+#hit-wrap {
+  position: absolute; bottom: 16px; left: 50%;
+  transform: translateX(-50%); z-index: 25;
+}
+#btn-hit {
+  position: relative; overflow: hidden;
+  width: 140px; height: 56px;
+  border: none; border-radius: 28px;
+  background: linear-gradient(135deg, var(--mi-gold) 0%, var(--mi-gold-dk) 100%);
+  color: var(--mi-blue);
+  font-family: var(--font-display);
+  font-size: 1.6rem; letter-spacing: .08em;
+  cursor: pointer;
+  box-shadow: 0 0 24px rgba(255,215,0,.4), 0 6px 18px rgba(0,0,0,.4);
+  transition: .22s var(--ease);
+}
+#btn-hit:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 36px rgba(255,215,0,.65), 0 10px 24px rgba(0,0,0,.4);
+}
+#btn-hit:active { transform: translateY(1px); }
+#btn-hit:disabled { opacity: .4; cursor: default; transform: none !important; }
+.btn-glow {
+  position: absolute; inset: -4px;
+  border-radius: 30px;
+  background: transparent;
+  border: 2px solid rgba(255,215,0,.5);
+  animation: glowPulse 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes glowPulse {
+  0%,100% { opacity: .5; transform: scale(1); }
+  50%      { opacity: 0; transform: scale(1.08); }
+}
+
+/* ── LIFE / WICKETS ROW ──────────────────────────────────────── */
+#life-row {
+  position: absolute; top: 70px;
+  left: calc(50% - min(180px, 44vw));
+  display: flex; align-items: center; gap: 8px; z-index: 25;
+}
+.life-label {
+  font-size: .58rem; letter-spacing: .16em;
+  color: var(--mi-gold); text-transform: uppercase;
+}
+#life-icons { display: flex; gap: 5px; font-size: 1.2rem; }
+.life { transition: opacity .3s, filter .3s; }
+.life.gone { opacity: .15; filter: grayscale(1); }
+
+/* ── GAME OVER CARD ──────────────────────────────────────────── */
+.over-card { text-align: center; }
+
+#over-trophy {
+  font-size: 3.8rem; margin-bottom: 8px;
+  animation: tropBounce .65s cubic-bezier(.2,1.4,.4,1) .15s both;
+}
+@keyframes tropBounce {
+  from { transform: scale(0) rotate(-20deg); }
+  to   { transform: none; }
+}
+.over-headline {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 6vw, 3rem);
+  color: var(--mi-gold); letter-spacing: .06em; margin-bottom: 4px;
+}
+.over-sub {
+  font-size: .82rem; letter-spacing: .14em;
+  color: var(--mi-off); text-transform: uppercase; margin-bottom: 18px;
+}
+
+/* Match card */
+.match-card {
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,215,0,.15);
+  border-radius: var(--radius);
+  padding: 14px 18px; margin-bottom: 16px;
+}
+.match-team {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.team-name {
+  font-family: var(--font-display); font-size: 1rem;
+  color: var(--mi-gold); letter-spacing: .12em;
+}
+.team-score {
+  font-family: var(--font-display); font-size: 1.8rem;
+  color: var(--mi-white); line-height: 1;
+}
+.mc-wickets { font-size: 1rem; color: var(--mi-red); }
+.match-team.opp .team-score { color: var(--mi-off); }
+.match-vs {
+  font-family: var(--font-display); font-size: 1.1rem;
+  color: rgba(255,255,255,.2); letter-spacing: .1em;
+}
+
+/* Stats */
+.stat-row {
+  display: flex; gap: 10px; margin-bottom: 14px;
+}
+.stat-box {
+  flex: 1; background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 10px; padding: 12px 8px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.stat-box.gold { border-color: rgba(255,215,0,.3); background: rgba(255,215,0,.05); }
+.stat-lbl {
+  font-size: .6rem; letter-spacing: .15em;
+  color: var(--mi-off); text-transform: uppercase;
+}
+.stat-val {
+  font-family: var(--font-display);
+  font-size: 2rem; color: var(--mi-gold); line-height: 1;
+}
+
+/* New HS badge */
+.nh-badge {
+  background: var(--mi-gold); color: var(--mi-blue);
+  font-size: .75rem; font-weight: 800; letter-spacing: .14em;
+  padding: 5px 14px; border-radius: 20px;
+  display: inline-block; margin: 0 0 14px;
+  animation: nhPulse .9s ease-in-out infinite alternate;
+}
+@keyframes nhPulse {
+  from { box-shadow: 0 0 0 0 rgba(255,215,0,.4); }
+  to   { box-shadow: 0 0 0 10px rgba(255,215,0,0); }
+}
+
+/* ── PARTICLES ───────────────────────────────────────────────── */
+.spark {
+  position: fixed; pointer-events: none;
+  border-radius: 50%; z-index: 200;
+  animation: sparkFly var(--dur,.7s) ease-out forwards;
+}
+@keyframes sparkFly {
+  0%   { opacity:1; transform:translate(0,0) scale(1); }
+  100% { opacity:0; transform:translate(var(--dx),var(--dy)) scale(0); }
+}
+
+/* ── SCREEN FLASH ────────────────────────────────────────────── */
+#flash {
+  position: fixed; inset: 0; pointer-events: none; z-index: 300; opacity: 0;
+}
+#flash.green { background:rgba(0,180,60,.18); animation: fl .3s ease-out forwards; }
+#flash.red   { background:rgba(230,57,70,.22); animation: fl .4s ease-out forwards; }
+#flash.gold  { background:rgba(255,215,0,.18); animation: fl .35s ease-out forwards; }
+@keyframes fl { to { opacity: 0; } }
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-height: 640px) {
+  #arena { height: 68vh; }
+  .mi-card { padding: 16px 20px; }
+  .mi-title { font-size: 2rem; }
+  #btn-hit { width: 120px; height: 48px; font-size: 1.3rem; }
+}
+@media (min-width: 768px) {
+  #arena { width: 380px; height: 520px; }
+}
